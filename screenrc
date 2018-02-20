@@ -1,0 +1,9 @@
+shell -$SHELL
+startup_message off
+defscrollback 5000
+vbell off
+bell_msg "woof"
+
+#hardstatus alwayslastline
+#hardstatus string "%{= bW} %H %-Lw [%n*%f %t] %+Lw %=%c %Y.%m.%d"
+caption always "%{= bW} %H | %-Lw [%n*%f %t] %+Lw %=%c %Y.%m.%d"
