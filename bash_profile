@@ -1,11 +1,29 @@
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=-1                 # unlimited HISTFILE
+HISTFILE=${HOME}/.bash_history
+HISTIGNORE='ls:bg:fg:history:clear:c'
+HISTTIMEFORMAT='%T '
+
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
 
 # exports
-source ${HOME}/.bash_exports
+if [ -f ${HOME}/.bash_exports ]; then
+    source ${HOME}/.bash_exports
+fi
 
 # aliases
-source ${HOME}/.bash_aliases
+if [ -f ${HOME}/.bash_aliases ]; then
+    source ${HOME}/.bash_aliases
+fi
 
 # Always list directory contents upon 'cd'
 cd() { builtin cd "$@"; ll; }
