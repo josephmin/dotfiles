@@ -1,32 +1,46 @@
 #!/usr/bin/env bash
 
+# copy files: prompt if overwriting an existing file
 alias cp='cp -iv'
+# move files: prompt is overwriting an existing file
 alias mv='mv -iv'
+# make directories: create intermediate directories as required
 alias mkdir='mkdir -pv'
-alias ll='ls -lFGhp'                         # list all files colorized in long format
-alias la='ls -laFGh'                        # list all files colorized in long format, including dot files
+# list directory contents
+alias ls='ls -FG'       # list all files colorized
+alias ll='ls -lFGh'     # list all files colorized in long format
+alias la='ls -laFGh'    # list all files colorized in long format, including dot files
+
 alias grep='grep --color=auto'              # enable colored 'grep' output
-alias less='less -FSRXc'                    # Preferred 'less' implementation
-alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
-alias ..='cd ../'                           # Go back 1 directory level
-alias ...='cd ../../'                       # Go back 2 directory levels
-alias .3='cd ../../../'                     # Go back 3 directory levels
-alias .4='cd ../../../../'                  # Go back 4 directory levels
-alias .5='cd ../../../../../'               # Go back 5 directory levels
-alias .6='cd ../../../../../../'            # Go back 6 directory levels
-alias edit='subl'                           # edit:         Opens any file in sublime editor
-alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
-alias ~="cd ~"                              # ~:            Go Home
-alias c='clear'                             # c:            Clear terminal display
-alias which='type -all'                     # which:        Find executables
-alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
-alias show_options='shopt'                  # Show_options: display bash options settings
+alias less='less --clear-screen --quit-if-one-screen --LINE-NUMBERS --no-init'
+
+alias ~="cd ~"                      # Go Home
+alias cd..='cd ../'                 # Go back 1 directory level (frequent typo)
+alias ..='cd ../'                   # Go back 1 directory level
+alias ...='cd ../../'               # Go back 2 directory levels
+alias .3='cd ../../../'             # Go back 3 directory levels
+alias .4='cd ../../../../'          # Go back 4 directory levels
+alias .5='cd ../../../../../'       # Go back 5 directory levels
+alias .6='cd ../../../../../../'    # Go back 6 directory levels
+
+# open a file in sublime editor
+alias edit='subl'
+# open current directory in MacOS Finder
+alias f='open -a Finder ./'
+# clear the terminal display
+alias c='clear'
+# find executables
+alias which='type -all'
+# display bash options settings
+alias showOptions='shopt'
 
 # get macOS software updates
 alias update='sudo softwareupdate -i -a'
 # get and install brew updates
 alias brewupdate='brew -v update; brew -v upgrade --all; brew cleanup'
 
+# get external ip
+alias ip="www.google.com"
 # get local wifi ip
 alias localip="ipconfig getifaddr en0"
 
@@ -49,8 +63,8 @@ alias showHidden='defaults write com.apple.finder ShowAllFiles --bool true && ki
 alias hideHidden='defaults write com.apple.finder ShowAllFiles --bool false && killall Finder'
 
 # Hide/show all desktop icons (useful when presenting)
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias hideDesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showDesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
 # run a screensaver on the Desktop
 alias screensaverDesktop='/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background'
@@ -60,9 +74,9 @@ alias screensaverDesktop='/System/Library/Frameworks/ScreenSaver.framework/Resou
 alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
 
 # Disable Spotlight
-alias spotoff="sudo mdutil -a -i off"
+alias spotlightOff="sudo mdutil -a -i off"
 # Enable Spotlight
-alias spoton="sudo mdutil -a -i on"
+alias spotlihgtOn="sudo mdutil -a -i on"
 
 # Stuff I never really use but cannot delete either because of http://xkcd.com/530/
 alias stfu="osascript -e 'set volume output muted true'"

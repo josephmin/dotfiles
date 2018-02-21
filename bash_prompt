@@ -90,7 +90,7 @@ prompt_command() {
     local BOLD_WHITE="\[\033[1;37m\]"
     local RESET="\[\033[0m\]"
 
-    export PS1="(\[\$(exitstatus)\]) ${BOLD_WHITE}\!${RESET} ${BOLD_CYAN}[\[\D{%Y%m%d} \t\\]]${RESET} ${BOLD_PURPLE}\u${RESET}:${BOLD_BLUE}\W${RESET}\[\$(parse_git_branch)\] \$ "
+    export PS1="(\$(exitstatus)) ${BOLD_CYAN}[\D{%Y%m%d} \t]${RESET} ${BOLD_PURPLE}\u@\h${RESET}:${BOLD_BLUE}\w${RESET}\$(parse_git_branch)\$(vpnstatus) \n\! \$ "
 }
 
 exitstatus() {
@@ -99,7 +99,7 @@ exitstatus() {
     local BOLD_RED="\033[1;31m"
     local RESET="\033[0m"
 
-    if [[ ${EXITCODE} -eq 0 ]]; then
+    if [ ${EXITCODE} -eq 0 ]; then
         echo -ne "${BOLD_GREEN}${EXITCODE}${RESET}"
     else
         echo -ne "${BOLD_RED}${EXITCODE}${RESET}"
@@ -108,11 +108,12 @@ exitstatus() {
 
 # get current branch in git repo
 parse_git_branch() {
-	BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
-	if [ ! "${BRANCH}" == "" ]
-	then
+    local BOLD_RED="\033[1;31m"
+    local RESET="\033[0m"
+	local BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+	if [ ! "${BRANCH}" == "" ];	then
 		STATE=$(parse_git_dirty)
-		echo " [${BRANCH}${STATE}]"
+		echo -ne " [${BRANCH}${BOLD_RED}${STATE}${RESET}]"
 	else
 		echo ""
 	fi
@@ -120,14 +121,14 @@ parse_git_branch() {
 
 # get current status of git repo
 parse_git_dirty() {
-    GIT_STATUS="$(git status 2>&1 | tee)"
-	DIRTY=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?")
-	UNTRACKED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?")
-	AHEAD=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?")
-	NEWFILE=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?")
-	RENAMED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?")
-    DELETED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?")
-	BITS=''
+    local GIT_STATUS="$(git status 2>&1 | tee)"
+	local DIRTY=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?")
+	local UNTRACKED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?")
+	local AHEAD=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?")
+	local NEWFILE=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?")
+	local RENAMED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?")
+    local DELETED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?")
+	local BITS=''
 	if [ "${RENAMED}" == "0" ]; then
 		BITS=">${BITS}"
 	fi
@@ -153,5 +154,15 @@ parse_git_dirty() {
 	fi
 }
 
+vpnstatus() {
+    local BOLD_YELLOW="\033[1;33m"
+    local RESET="\033[0m"
+    if [[ -f ${HOME}/.rsg_aliases && $(vpnst) ]]; then
+        echo -ne " ${BOLD_YELLOW}(vpn)${RESET}"
+    else
+        echo ""
+    fi
+ }
+
 export PROMPT_COMMAND=prompt_command
-export PS2="| => "
+export PS2="\! => "
