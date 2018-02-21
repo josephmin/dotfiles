@@ -24,6 +24,10 @@ fi
 if [ -f ${HOME}/.bash_aliases ]; then
     source ${HOME}/.bash_aliases
 fi
+#rsg aliases
+if [ -f ${HOME}/.rsg_aliases ]; then
+    source ${HOME}/.rsg_aliases
+fi
 
 # Always list directory contents upon 'cd'
 cd() { builtin cd "$@"; ll; }
