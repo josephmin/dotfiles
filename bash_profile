@@ -15,6 +15,11 @@ HISTTIMEFORMAT='%T '
 # Make bash check its window size after a process completes
 shopt -s checkwinsize
 
+# bash prompt
+if [ -f ${HOME}/.bash_prompt ]; then
+    source ${HOME}/.bash_prompt
+fi
+
 # exports
 if [ -f ${HOME}/.bash_exports ]; then
     source ${HOME}/.bash_exports
@@ -72,3 +77,6 @@ extract () {
 #    #echo -e "\n${RED}DNS Configuration:$NC " ; scutil --dns
 #    echo
 #}
+
+# bash completion
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion

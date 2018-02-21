@@ -45,12 +45,11 @@
 #Replace any leading leading 0; with 1; for bold colors
 #Replace any leading 0; with 4; to underline
 
-# change prompt
 # Bash Prompt Escape Sequences
 #   \a     an ASCII bell character (07)
 #   \d     the date in "Weekday Month Date" format (e.g., "Tue May 26")
 #   \e     an ASCII escape character (033)
-#   \h     the hostname up to the first `.'
+#   \h     the hostname up to the first '.'
 #   \H     the hostname
 #   \j     the number of jobs currently managed by the shell
 #   \l     the basename of the shell's terminal device name
@@ -91,7 +90,7 @@ prompt_command() {
     local BOLD_WHITE="\[\033[1;37m\]"
     local RESET="\[\033[0m\]"
 
-    export PS1="(\$(exitstatus)) ${BOLD_WHITE}\!${RESET} ${BOLD_CYAN}[\[\D{%Y%m%d} \t\\]]${RESET} ${BOLD_PURPLE}\u${RESET}:${BOLD_BLUE}\W${RESET} \$(parse_git_branch) \$ "
+    export PS1="(\[\$(exitstatus)\]) ${BOLD_WHITE}\!${RESET} ${BOLD_CYAN}[\[\D{%Y%m%d} \t\\]]${RESET} ${BOLD_PURPLE}\u${RESET}:${BOLD_BLUE}\W${RESET}\[\$(parse_git_branch)\] \$ "
 }
 
 exitstatus() {
@@ -109,11 +108,11 @@ exitstatus() {
 
 # get current branch in git repo
 parse_git_branch() {
-	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+	BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 	if [ ! "${BRANCH}" == "" ]
 	then
-		STAT=`parse_git_dirty`
-		echo "[${BRANCH}${STAT}]"
+		STATE=$(parse_git_dirty)
+		echo " [${BRANCH}${STATE}]"
 	else
 		echo ""
 	fi
@@ -121,34 +120,34 @@ parse_git_branch() {
 
 # get current status of git repo
 parse_git_dirty() {
-	status=`git status 2>&1 | tee`
-	dirty=`echo -ne "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
-	untracked=`echo -ne "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
-	ahead=`echo -ne "${status}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?"`
-	newfile=`echo -ne "${status}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?"`
-	renamed=`echo -ne "${status}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?"`
-	deleted=`echo -ne "${status}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?"`
-	bits=''
-	if [ "${renamed}" == "0" ]; then
-		bits=">${bits}"
+    GIT_STATUS="$(git status 2>&1 | tee)"
+	DIRTY=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?")
+	UNTRACKED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?")
+	AHEAD=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?")
+	NEWFILE=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?")
+	RENAMED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?")
+    DELETED=$(echo -ne "${GIT_STATUS}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?")
+	BITS=''
+	if [ "${RENAMED}" == "0" ]; then
+		BITS=">${BITS}"
 	fi
-	if [ "${ahead}" == "0" ]; then
-		bits="*${bits}"
+	if [ "${AHEAD}" == "0" ]; then
+		BITS="*${BITS}"
 	fi
-	if [ "${newfile}" == "0" ]; then
-		bits="+${bits}"
+	if [ "${NEWFILE}" == "0" ]; then
+		BITS="+${BITS}"
 	fi
-	if [ "${untracked}" == "0" ]; then
-		bits="?${bits}"
+	if [ "${UNTRACKED}" == "0" ]; then
+		BITS="?${BITS}"
 	fi
-	if [ "${deleted}" == "0" ]; then
-		bits="x${bits}"
+	if [ "${DELETED}" == "0" ]; then
+		BITS="x${BITS}"
 	fi
-	if [ "${dirty}" == "0" ]; then
-		bits="!${bits}"
+	if [ "${DIRTY}" == "0" ]; then
+		BITS="!${BITS}"
 	fi
-	if [ ! "${bits}" == "" ]; then
-		echo " ${bits}"
+	if [ ! "${BITS}" == "" ]; then
+		echo " ${BITS}"
 	else
 		echo ""
 	fi
