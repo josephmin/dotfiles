@@ -96,12 +96,12 @@ prompt_command() {
 
 exitstatus() {
     local EXITCODE="$?"
-    local BOLD_GREEN="\033[0;32m"
+    local GREEN="\033[0;32m"
     local BOLD_RED="\033[1;31m"
     local RESET="\033[0m"
 
     if [ ${EXITCODE} -eq 0 ]; then
-        echo -ne "(${BOLD_GREEN}${EXITCODE}${RESET})"
+        echo -ne "(${GREEN}${EXITCODE}${RESET})"
     else
         echo -ne "(${BOLD_RED}${EXITCODE}${RESET})"
     fi
@@ -109,12 +109,12 @@ exitstatus() {
 
 # get current branch in git repo
 parse_git_branch() {
-    local BOLD_RED="\033[0;31m"
+    local RED="\033[0;31m"
     local RESET="\033[0m"
 	local BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 	if [ ! "${BRANCH}" == "" ];	then
 		STATE=$(parse_git_dirty)
-		echo -ne " [${BRANCH}${BOLD_RED}${STATE}${RESET}]"
+		echo -ne " [${BRANCH}${RED}${STATE}${RESET}]"
 	else
 		echo ""
 	fi
@@ -158,7 +158,7 @@ parse_git_dirty() {
 vpnstatus() {
     local BOLD_YELLOW="\033[1;33m"
     local RESET="\033[0m"
-    if [[ -f ${HOME}/.rsg_aliases && $(vpnst) ]]; then
+    if [[ -f ${HOME}/.openconnect/pid ]]; then
         echo -ne " ${BOLD_YELLOW}(vpn)${RESET}"
     else
         echo ""
