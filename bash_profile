@@ -77,6 +77,3 @@ extract () {
 #    #echo -e "\n${RED}DNS Configuration:$NC " ; scutil --dns
 #    echo
 #}
-
-# bash completion
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
